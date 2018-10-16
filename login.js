@@ -26,7 +26,7 @@
       // firebase.auth.GithubAuthProvider.PROVIDER_ID,
       firebase.auth.EmailAuthProvider.PROVIDER_ID
     ],
-    tosUrl: 'home.html'
+    credentialHelper: firebaseui.auth.CredentialHelper.NONE
   };
 
   // The start method will wait until the DOM is loaded.
