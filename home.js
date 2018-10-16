@@ -19,5 +19,5 @@ var homePage = {};
     firebase.auth().signOut();
   }
 
-  homePage.logOut = logOut();
+  homePage.logOut = logOut;
 })()
