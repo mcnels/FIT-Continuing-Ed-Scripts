@@ -1,4 +1,4 @@
-var homePage = {};
+var homeApp = {};
 (function() {
   var firebase = app_firebase;
   var uid = null;
@@ -11,7 +11,7 @@ var homePage = {};
           // redirect to login page
           uid = null;
           alert('Please log in first.');
-          window.location = 'login.html';
+          window.location.replace('login.html');
       }
   });
 
@@ -19,5 +19,5 @@ var homePage = {};
     firebase.auth().signOut();
   }
 
-  homePage.logOut = logOut;
+  homeApp.logOut = logOut;
 })()
