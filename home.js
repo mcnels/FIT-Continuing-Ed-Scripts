@@ -10,8 +10,8 @@ var homeApp = {};
       } else {
           // redirect to login page
           uid = null;
-          alert('Please log in first.');
           window.location.replace('login.html');
+          alert('Please log in first.');
       }
   });
 
