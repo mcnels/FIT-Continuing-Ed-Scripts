@@ -11,7 +11,6 @@ var homeApp = {};
           // redirect to login page
           uid = null;
           window.location.replace('login.html');
-          alert('Please log in first.');
       }
   });
 
