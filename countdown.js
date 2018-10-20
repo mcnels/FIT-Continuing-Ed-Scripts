@@ -1,6 +1,6 @@
 // Create a request variable and assign a new XMLHttpRequest object to it.
 var students = new XMLHttpRequest();
-console.log(window);
+console.log(document.cookie);
 // Open a new connection, using the GET request on the URL endpoint
 //students.open('GET', 'https://fit.instructure.com/api/v1/courses/533668/students', true);
 students.open('GET', 'https://fit.instructure.com/api/v1/courses/533668/quizzes/830697/submissions', true);
