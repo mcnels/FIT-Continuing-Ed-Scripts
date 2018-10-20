@@ -1,13 +1,17 @@
 // Create a request variable and assign a new XMLHttpRequest object to it.
 //var students = new XMLHttpRequest();
-var findID = new XMLHttpRequest();
-findID.open('GET', 'https://fit.instructure.com/api/v1/users/self/profile', true);
+//var findID = new XMLHttpRequest();
+
+$.get(‘/api/v1/users/self/profile’, function(profile) {
+    console.log(profile.login_id);
+});
+/*findID.open('GET', 'https://fit.instructure.com/api/v1/users/self/profile', true);
 findID.setRequestHeader("Authorization", "Bearer 1059~YUDPosfOLaWfQf4XVAsPavyXFYNjGnRHzqSbQuwFs6eQDANaeShDaGPVEDufVAEj");
 // Send request
 findID.send();
 findID.onload = function () {
   console.log(this.response);
-}
+}*/
 // Open a new connection, using the GET request on the URL endpoint
 //students.open('GET', 'https://fit.instructure.com/api/v1/courses/533668/students', true);
 //students.open('GET', 'https://fit.instructure.com/api/v1/courses/533668/quizzes/830697/submissions', true);
