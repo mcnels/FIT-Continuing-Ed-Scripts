@@ -2,7 +2,7 @@
 //var students = new XMLHttpRequest();
 //var findID = new XMLHttpRequest();
 
-$.get('/api/v1/users/self/profile', function(profile) {
+$(this).get('/api/v1/users/self/profile', function(profile) {
     console.log(profile.login_id);
 });
 /*findID.open('GET', 'https://fit.instructure.com/api/v1/users/self/profile', true);
