@@ -1,0 +1,13 @@
+/* #timerFrontPageRBT {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Arial";
+    margin: auto;
+    background-color: green;
+    text-align: center;
+} */
+
+.with-right-side #right-side-wrapper {
+  display: none;
+}
