@@ -24,7 +24,6 @@ students = Array.new(list_student)
 list = Array.new
 noSubm = Array.new
 
-# noSubm.push(:id => "", :name => "stu['user']['name']", :invDate => "stu['created_at']", :status => "stu['enrollment_state']")
 students.each do |stu|
   taken = false
 
@@ -34,7 +33,7 @@ students.each do |stu|
       if stu['user_id'] == submission['user_id']
         taken = true
         # puts stu['user']['name'].to_s
-        list.push(:id => stu['user_id'], :name => stu['user']['name'], :invDate => stu['created_at'], :status => stu['enrollment_state'], :submDate => submission['finished_at'].to_s)
+        list.push(:enroll => stu['id'], :id => stu['user_id'], :name => stu['user']['name'], :invDate => stu['created_at'], :status => stu['enrollment_state'], :submDate => submission['finished_at'].to_s)
 
       end
       break if taken
@@ -42,30 +41,39 @@ students.each do |stu|
   end
 
   if taken == false
-    noSubm.push(:name => stu['user']['name'], :invDate => stu['created_at'], :status => stu['enrollment_state'])
+    noSubm.push(:enroll => stu['id'], :name => stu['user']['name'], :invDate => stu['created_at'], :status => stu['enrollment_state'])
   end
 
 end
 
 noSubm.uniq! { |ex| ex[:name] }
-# noSubm[:name] = noSubm[:name].uniq
 
+#test
 puts list.length
 puts list
-puts "----------------------------------------------------------------------------------------------------------------------"
+puts "------------------------------------------------------------------------------------------------------"
 puts noSubm.length
 puts noSubm
-puts "----------------------------------------------------------------------------------------------------------------------"
+puts "------------------------------------------------------------------------------------------------------"
 
 # Get deactivation list
 deactivation = Array.new
 noSubm.each do |li|
   if (Date.today - DateTime.parse(li[:invDate].to_s).to_date) >= 30
-    deactivation.push(:name => li[:name], :time => (Date.today - DateTime.parse(li[:invDate].to_s).to_date))
+    deactivation.push(:enroll => li[:enroll], :name => li[:name], :status => li[:status], :days => (Date.today - DateTime.parse(li[:invDate].to_s).to_date))
   end
 end
 
 #test
-# puts deactivation.length
-# puts deactivation
-# puts (Date.today - DateTime.parse("2019-01-20T12:36:02Z").to_date)
+puts deactivation.length
+puts deactivation
+puts "------------------------------------------------------------------------------------------------------"
+
+deactivation.each do |deact|
+  if deact[:status].to_s == "active"
+    canvas.delete("/api/v1/courses/533396/enrollments/" + deact[:enroll].to_s, {'task' =>'inactivate'})
+    puts deact[:name].to_s + " deactivated!"
+  end
+end
+
+puts "All done!"
