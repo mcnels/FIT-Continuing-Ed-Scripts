@@ -4,7 +4,7 @@ require 'json'
 require 'axlsx'
 require 'date'
 
-canvas = Canvas::API.new(:host => "https://fit.instructure.com", :token => "1059~YUDPosfOLaWfQf4XVAsPavyXFYNjGnRHzqSbQuwFs6eQDANaeShDaGPVEDufVAEj")
+canvas = Canvas::API.new(:host => "https://fit.instructure.com", :token => "1059~c5Bnm7yge4gSWfeOJ9ZRtWCpGbUPwDkRQzXgV20CeMcA1j9wvEpXvlMrF3x9onyD")
 
 submInfo = Array.new
 # precourse survey submission date
@@ -69,11 +69,22 @@ puts deactivation.length
 puts deactivation
 puts "------------------------------------------------------------------------------------------------------"
 
+isDeactivated = false
+
 deactivation.each do |deact|
   if deact[:status].to_s == "active"
     canvas.delete("/api/v1/courses/533396/enrollments/" + deact[:enroll].to_s, {'task' =>'inactivate'})
+    isDeactivated = true
+    # send message to abareg, Jenn, Stephanie and Marisell (1873108)
+    # canvas.post("/api/v1/conversations", {'recipients[]=' =>'1010887', 'recipients[]=' =>'1842270', 'recipients[]=' =>'1874990', 'recipients[]=' =>'1873108', 'subject=' =>'RBT Idaho deactivated student', 'body=' => deact[:name].to_s+' \n' })
+    canvas.post("/api/v1/conversations", {'recipients[]=' => ['1010887', '1842270', '1874990', '1873108'], 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' })
     puts deact[:name].to_s + " deactivated!"
   end
+end
+
+if isDeactivated == false
+  # canvas.post("/api/v1/conversations", {'recipients[]=' => ['1010887', '1842270', '1588479'], 'subject=' =>'RBT Idaho Deactivations', 'body=' => 'test \n' })
+  puts "No deactivations today!"
 end
 
 puts "All done!"
