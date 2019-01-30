@@ -48,9 +48,6 @@ rbtCourses.each do |course_id|
     if (quiz['title'].to_s.include? "Precourse Survey") || (quiz['title'].to_s.include? "Pre-course Survey") || (quiz['title'].to_s.include? "Pre course Survey")
       numRBTquizzes = numRBTquizzes + 1
       precourseSurveyList.push(:id => quiz['id'], :coursename => course_id[:name], :title => quiz['title'])
-      # puts quiz['id']
-
-      # puts numRBTquizzes
 
       # Get all the submissions for the precourse survey
       submissions_list = canvas.get("/api/v1/courses/" + course_id[:id].to_s + "/quizzes/" + quiz['id'].to_s + "/submissions?", {'per_page' => '100'})
@@ -60,14 +57,12 @@ rbtCourses.each do |course_id|
 
       # Add submissions info to array of records for student
       submissions_list.each do |submission|
+        # skip Barbara Metzgder
+        next if submission['user_id'].to_s == '1870970'
 
-        unless submission['finished_at'].nil? # submission['finished_at'].to_s != "null" || submission['finished_at'].to_s != "null"
-        # if submission['finished_at'].to_s != "null" || submission['finished_at'].to_s != "null"
-          # puts submission['finished_at'].to_s
+        unless submission['finished_at'].nil?
 
-          # reminderDate = submission['finished_at'].to_s + 150
-          # deadlineDate = submission['finished_at'].to_s + 180
-
+          # Calculate reminder and deadline dates
           reminderDate = DateTime.parse(submission['finished_at'].to_s).to_date + 150
           deadlineDate = DateTime.parse(submission['finished_at'].to_s).to_date + 180
 
@@ -98,15 +93,23 @@ puts "--------------------------------------------------------------------------
 deactivation = Array.new
 reminder = Array.new
 stuInfo.each do |st|
-  if (Date.today == DateTime.parse(st[:deadline].to_s).to_date) #|| (Date.parse(st[:deadline].to_s).past?)
-  # if (Date.today - DateTime.parse(st[:deadline].to_s).to_date) <= 0
+  if (Date.today == DateTime.parse(st[:deadline].to_s).to_date)
     deactivation.push(:id => st[:id], :sbmtime => st[:sbmtime].to_s, :deadlineDay => st[:deadline].to_s)
+
+    # send to staff members
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1874990', 'subject=' =>'RBT Deactivations', 'body=' => deactivation[:id].to_s+' \n' }) #Jenn
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1010887', 'subject=' =>'RBT Deactivations', 'body=' => deactivation[:id].to_s+' \n' }) #abareg
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1842270', 'subject=' =>'RBT Deactivations', 'body=' => deactivation[:id].to_s+' \n' }) #Stephanie
   end
 
-  if (Date.today == DateTime.parse(st[:reminder].to_s).to_date) #|| (Date.parse(st[:reminder].to_s).past?)
+  if (Date.today == DateTime.parse(st[:reminder].to_s).to_date)
     reminder.push(:id => st[:id], :sbmtime => st[:sbmtime].to_s, :reminderDay => st[:reminder].to_s)
-    # send names to abareg, jenn and steph
-    canvas.post("/api/v1/conversations", {'recipients[]=' => ['1010887', '1842270', '1874990'], 'subject=' =>'RBT 150 day reminder', 'body=' => reminder[:id].to_s+' \n' })
+
+    # send to staff members
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1874990', 'subject=' =>'RBT Deactivations', 'body=' => reminder[:id].to_s+' \n' }) #Jenn
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1010887', 'subject=' =>'RBT Deactivations', 'body=' => reminder[:id].to_s+' \n' }) #abareg
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1842270', 'subject=' =>'RBT Deactivations', 'body=' => reminder[:id].to_s+' \n' }) #Stephanie
+  end
   end
 end
 
@@ -118,22 +121,24 @@ puts "There are #{deactivation.length} students to deactivate today."
 puts deactivation
 puts "------------------------------------------------------------------------------------------------------"
 
-# isDeactivated = false
-#
-# deactivation.each do |deact|
-#   if deact[:status].to_s == "active"
-#     canvas.delete("/api/v1/courses/533396/enrollments/" + deact[:enroll].to_s, {'task' =>'inactivate'})
-#     isDeactivated = true
-#     # send message to abareg, Jenn, Stephanie and Marisell (1873108)
-#     # canvas.post("/api/v1/conversations", {'recipients[]=' =>'1010887', 'recipients[]=' =>'1842270', 'recipients[]=' =>'1874990', 'recipients[]=' =>'1873108', 'subject=' =>'RBT Idaho deactivated student', 'body=' => deact[:name].to_s+' \n' })
-#     canvas.post("/api/v1/conversations", {'recipients[]=' => ['1010887', '1842270', '1874990', '1873108'], 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' })
-#     puts deact[:name].to_s + " deactivated!"
-#   end
-# end
-#
-# if isDeactivated == false
-#   # canvas.post("/api/v1/conversations", {'recipients[]=' => ['1010887', '1842270', '1588479'], 'subject=' =>'RBT Idaho Deactivations', 'body=' => 'test \n' })
-#   puts "No deactivations today!"
-# end
+isDeactivated = false
+
+deactivation.each do |deact|
+  if deact[:status].to_s == "active"
+    canvas.delete("/api/v1/courses/533396/enrollments/" + deact[:enroll].to_s, {'task' =>'inactivate'})
+    isDeactivated = true
+
+    # send message to abareg, Jenn, Stephanie and Marisell (1873108)
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1010887', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #abareg
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1842270', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #Stephanie
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1874990', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #Jenn
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1873108', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #Marisell
+    puts deact[:name].to_s + " deactivated!"
+  end
+end
+
+if isDeactivated == false
+  puts "No deactivations today!"
+end
 
 puts "All done!"

@@ -75,15 +75,17 @@ deactivation.each do |deact|
   if deact[:status].to_s == "active"
     canvas.delete("/api/v1/courses/533396/enrollments/" + deact[:enroll].to_s, {'task' =>'inactivate'})
     isDeactivated = true
+
     # send message to abareg, Jenn, Stephanie and Marisell (1873108)
-    # canvas.post("/api/v1/conversations", {'recipients[]=' =>'1010887', 'recipients[]=' =>'1842270', 'recipients[]=' =>'1874990', 'recipients[]=' =>'1873108', 'subject=' =>'RBT Idaho deactivated student', 'body=' => deact[:name].to_s+' \n' })
-    canvas.post("/api/v1/conversations", {'recipients[]=' => ['1010887', '1842270', '1874990', '1873108'], 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' })
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1010887', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #abareg
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1842270', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #Stephanie
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1874990', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #Jenn
+    canvas.post("/api/v1/conversations", {'recipients[]=' => '1873108', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #Marisell
     puts deact[:name].to_s + " deactivated!"
   end
 end
 
 if isDeactivated == false
-  # canvas.post("/api/v1/conversations", {'recipients[]=' => ['1010887', '1842270', '1588479'], 'subject=' =>'RBT Idaho Deactivations', 'body=' => 'test \n' })
   puts "No deactivations today!"
 end
 
