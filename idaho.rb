@@ -76,16 +76,19 @@ deactivation.each do |deact|
     canvas.delete("/api/v1/courses/533396/enrollments/" + deact[:enroll].to_s, {'task' =>'inactivate'})
     isDeactivated = true
 
-    # send message to abareg, Jenn, Stephanie and Marisell (1873108)
-    canvas.post("/api/v1/conversations", {'recipients[]=' => '1010887', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #abareg
-    canvas.post("/api/v1/conversations", {'recipients[]=' => '1842270', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #Stephanie
-    canvas.post("/api/v1/conversations", {'recipients[]=' => '1874990', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #Jenn
-    canvas.post("/api/v1/conversations", {'recipients[]=' => '1873108', 'subject=' =>'RBT Idaho Deactivations', 'body=' => deact[:name].to_s+' \n' }) #Marisell
+    # send message to abareg, Jenn, Stephanie and Marisell
+    canvas.post("/api/v1/conversations", {'recipients[]' => '1010887', 'subject' =>'RBT Idaho Deactivations', 'body' => "Student #{deact[:name].to_s} has been deactivated."}) #abareg
+    canvas.post("/api/v1/conversations", {'recipients[]' => '1842270', 'subject' =>'RBT Idaho Deactivations', 'body' => "Student #{deact[:name].to_s} has been deactivated."}) #Stephanie
+    canvas.post("/api/v1/conversations", {'recipients[]' => '1874990', 'subject' =>'RBT Idaho Deactivations', 'body' => "Student #{deact[:name].to_s} has been deactivated."}) #Jenn
+    canvas.post("/api/v1/conversations", {'recipients[]' => '1873108', 'subject' =>'RBT Idaho Deactivations', 'body' => "Student #{deact[:name].to_s} has been deactivated."}) #Marisell
+    canvas.post("/api/v1/conversations", {'recipients[]' => '1588479', 'subject' =>'RBT Idaho Deactivations', 'body' => "Student #{deact[:name].to_s} has been deactivated."}) #mcnels
     puts deact[:name].to_s + " deactivated!"
   end
 end
 
 if isDeactivated == false
+  canvas.post("/api/v1/conversations", {'recipients[]' => '1010887', 'subject' =>'RBT Idaho Deactivations', 'body' => "No deactivations today!"}) #abareg
+  canvas.post("/api/v1/conversations", {'recipients[]' => '1588479', 'subject' =>'RBT Idaho Deactivations', 'body' => "No deactivations today!"}) #mcnels
   puts "No deactivations today!"
 end
 
