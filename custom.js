@@ -42,7 +42,7 @@ if (window.location.href == 'https://fit.instructure.com/courses/533668') {
     // Open a new connection, using the GET request on the URL endpoint | Get submission date for quiz
     students.open('GET', 'https://fit.instructure.com/api/v1/courses/533668/quizzes/830697/submissions', true);
     // Add authorization
-    students.setRequestHeader("Authorization", "Bearer 1059~YUDPosfOLaWfQf4XVAsPavyXFYNjGnRHzqSbQuwFs6eQDANaeShDaGPVEDufVAEj");
+    students.setRequestHeader("Authorization", "TOKEN GOES HERE");
     // Send request
     students.send();
 
