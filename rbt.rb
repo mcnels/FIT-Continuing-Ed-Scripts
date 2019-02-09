@@ -4,7 +4,7 @@ require 'json'
 require 'axlsx'
 require 'date'
 
-canvas = Canvas::API.new(:host => "https://fit.instructure.com", :token => "1059~c5Bnm7yge4gSWfeOJ9ZRtWCpGbUPwDkRQzXgV20CeMcA1j9wvEpXvlMrF3x9onyD")
+canvas = Canvas::API.new(:host => "https://fit.instructure.com", :token => "TOKEN GOES HERE")
 
 # Get all courses
 allCourses = canvas.get("/api/v1/accounts/8957/courses/")
@@ -150,16 +150,10 @@ puts deactivation
 puts "------------------------------------------------------------------------------------------------------"
 
 # send email to staff (reminders)
-canvas.post("/api/v1/conversations", {'recipients[]' => '1842270', 'subject' =>'RBT reminders for '+Date.today.to_s, 'body' => header+"\n\n"+reminderConfirm, "group_conversation" => true, "bulk_message" => true}) #Stephanie
-canvas.post("/api/v1/conversations", {'recipients[]' => '1874990', 'subject' =>'RBT reminders for '+Date.today.to_s, 'body' => header+"\n\n"+reminderConfirm, "group_conversation" => true, "bulk_message" => true}) #Jenn
-canvas.post("/api/v1/conversations", {'recipients[]' => '777482', 'subject' =>'RBT reminders for '+Date.today.to_s, 'body' => header+"\n\n"+reminderConfirm, "group_conversation" => true, "bulk_message" => true}) #Theresa
-canvas.post("/api/v1/conversations", {'recipients[]' => '1873108', 'subject' =>'RBT reminders for '+Date.today.to_s, 'body' => header+"\n\n"+reminderConfirm, "group_conversation" => true, "bulk_message" => true}) #Marisell
+canvas.post("/api/v1/conversations", {'recipients[]' => 'STAFFID', 'subject' =>'RBT reminders for '+Date.today.to_s, 'body' => header+"\n\n"+reminderConfirm, "group_conversation" => true, "bulk_message" => true}) #Stephanie
 
 if reminder.length == 0
-  canvas.post("/api/v1/conversations", {'recipients[]' => '777482', 'subject' =>'RBT reminders for ' + Date.today.to_s, 'body' => "No reminders for RBT today!", "group_conversation" => true, "bulk_message" => true}) #Theresa
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1842270', 'subject' =>'RBT reminders for ' + Date.today.to_s, 'body' => "No reminders for RBT today!", "group_conversation" => true, "bulk_message" => true}) #Stephanie
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1874990', 'subject' =>'RBT reminders for ' + Date.today.to_s, 'body' => "No reminders for RBT today!", "group_conversation" => true, "bulk_message" => true}) #Jenn
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1873108', 'subject' =>'RBT reminders for ' + Date.today.to_s, 'body' => "No reminders for RBT today!", "group_conversation" => true, "bulk_message" => true}) #Marisell
+  canvas.post("/api/v1/conversations", {'recipients[]' => 'STAFFID', 'subject' =>'RBT reminders for ' + Date.today.to_s, 'body' => "No reminders for RBT today!", "group_conversation" => true, "bulk_message" => true}) #Theresa
   puts "No reminders for RBT today!"
 end
 
@@ -176,16 +170,11 @@ deactivation.each do |deact|
 end
 
 # send email to staff (deactivations)
-canvas.post("/api/v1/conversations", {'recipients[]' => '777482', 'subject' =>'RBT Deactivations for ' + Date.today.to_s, 'body' => header2+"\n\n"+deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Theresa
-canvas.post("/api/v1/conversations", {'recipients[]' => '1842270', 'subject' =>'RBT Deactivations for ' + Date.today.to_s, 'body' => header2+"\n\n"+deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Stephanie
-canvas.post("/api/v1/conversations", {'recipients[]' => '1874990', 'subject' =>'RBT Deactivations for ' + Date.today.to_s, 'body' => header2+"\n\n"+deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Jenn
-canvas.post("/api/v1/conversations", {'recipients[]' => '1873108', 'subject' =>'RBT Deactivations for ' + Date.today.to_s, 'body' => header2+"\n\n"+deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Marisell
+canvas.post("/api/v1/conversations", {'recipients[]' => 'STAFFID', 'subject' =>'RBT Deactivations for ' + Date.today.to_s, 'body' => header2+"\n\n"+deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Theresa
 
 if deactivation.length == 0
-  canvas.post("/api/v1/conversations", {'recipients[]' => '777482', 'subject' =>'RBT Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT today!", "group_conversation" => true, "bulk_message" => true}) #Theresa
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1842270', 'subject' =>'RBT Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT today!", "group_conversation" => true, "bulk_message" => true}) #Stephanie
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1874990', 'subject' =>'RBT Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT today!", "group_conversation" => true, "bulk_message" => true}) #Jenn
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1873108', 'subject' =>'RBT Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT today!", "group_conversation" => true, "bulk_message" => true}) #Marisell
+  canvas.post("/api/v1/conversations", {'recipients[]' => 'STAFFID', 'subject' =>'RBT Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT today!", "group_conversation" => true, "bulk_message" => true}) #Theresa
+
   puts "No deactivations for RBT today!"
 end
 
