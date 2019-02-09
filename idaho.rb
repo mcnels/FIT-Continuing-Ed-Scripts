@@ -69,27 +69,41 @@ puts deactivation.length
 puts deactivation
 puts "------------------------------------------------------------------------------------------------------"
 
+# Add message to send to students down below
+# message2 = "Hello, \n"+"\n"
+# message2 += "Unfortunately, your access to the RBT Essentials course has expired. You did not begin the training within the allotted timeframe, therefore you have been automatically disenrolled from the training and will not be reimbursed the paid enrollment fee.\n"+"\n"
+# message2 += "To reregister for the RBT Essentials course, please visit https://register.fit.edu/jsp/index.jsp and click on Applied Behavior Analysis under HOME SUB-CATEGORIES; then select the date range under Registered Behavior Technician Training.\n"+ "\n"
+# message2 += "Please let us know if you have any questions or concerns. You can contact us by emailing abareg@fit.edu or calling 1-321-674-8382, option 2. We're available by phone from 9:00 AM to 5:00 PM Eastern time Monday through Friday, excluding university holidays.\n" + "\n"
+
 isDeactivated = false
 
+deactConfirm = ""
 deactivation.each do |deact|
   if deact[:status].to_s == "active"
     canvas.delete("/api/v1/courses/533396/enrollments/" + deact[:enroll].to_s, {'task' =>'inactivate'})
     isDeactivated = true
 
-    # send message to abareg, Jenn, Stephanie and Marisell
-    canvas.post("/api/v1/conversations", {'recipients[]' => '1010887', 'subject' =>'RBT Idaho Deactivations', 'body' => "Student #{deact[:name].to_s} has been deactivated."}) #abareg
-    canvas.post("/api/v1/conversations", {'recipients[]' => '1842270', 'subject' =>'RBT Idaho Deactivations', 'body' => "Student #{deact[:name].to_s} has been deactivated."}) #Stephanie
-    canvas.post("/api/v1/conversations", {'recipients[]' => '1874990', 'subject' =>'RBT Idaho Deactivations', 'body' => "Student #{deact[:name].to_s} has been deactivated."}) #Jenn
-    canvas.post("/api/v1/conversations", {'recipients[]' => '1873108', 'subject' =>'RBT Idaho Deactivations', 'body' => "Student #{deact[:name].to_s} has been deactivated."}) #Marisell
-    canvas.post("/api/v1/conversations", {'recipients[]' => '1588479', 'subject' =>'RBT Idaho Deactivations', 'body' => "Student #{deact[:name].to_s} has been deactivated."}) #mcnels
-    puts deact[:name].to_s + " deactivated!"
+    # send deactivation message to student
+    # canvas.post("/api/v1/conversations", {'recipients[]' => deact[:id].to_s, 'subject' =>'Important: Your Access to RBT Essentials Has Expired', 'body' => message2, "group_conversation" => true, "bulk_message" => true})
+
+    deactConfirm = deactConfirm + deact[:name].to_s + " has been deactivated.\n"
+    puts deact[:name].to_s + "has been deactivated and notified."
   end
 end
 
+# send message to abareg, Jenn, Stephanie, Theresa and Marisell
+canvas.post("/api/v1/conversations", {'recipients[]' => '1010887', 'subject' =>'RBT Idaho Deactivations', 'body' => deactConfirm, "group_conversation" => true, "bulk_message" => true}) #abareg
+canvas.post("/api/v1/conversations", {'recipients[]' => '1842270', 'subject' =>'RBT Idaho Deactivations', 'body' => deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Stephanie
+canvas.post("/api/v1/conversations", {'recipients[]' => '1874990', 'subject' =>'RBT Idaho Deactivations', 'body' => deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Jenn
+canvas.post("/api/v1/conversations", {'recipients[]' => '1873108', 'subject' =>'RBT Idaho Deactivations', 'body' => deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Marisell
+
 if isDeactivated == false
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1010887', 'subject' =>'RBT Idaho Deactivations', 'body' => "No deactivations today!"}) #abareg
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1588479', 'subject' =>'RBT Idaho Deactivations', 'body' => "No deactivations today!"}) #mcnels
+  canvas.post("/api/v1/conversations", {'recipients[]' => '777482', 'subject' =>'RBT Idaho Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT Idaho today!", "group_conversation" => true, "bulk_message" => true}) #Theresa
+  canvas.post("/api/v1/conversations", {'recipients[]' => '1842270', 'subject' =>'RBT Idaho Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT Idaho today!", "group_conversation" => true, "bulk_message" => true}) #Stephanie
+  canvas.post("/api/v1/conversations", {'recipients[]' => '1874990', 'subject' =>'RBT Idaho Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT Idaho today!", "group_conversation" => true, "bulk_message" => true}) #Jenn
+  canvas.post("/api/v1/conversations", {'recipients[]' => '1873108', 'subject' =>'RBT Idaho Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT Idaho today!", "group_conversation" => true, "bulk_message" => true}) #Marisell
   puts "No deactivations today!"
 end
 
+puts "------------------------------------------------------------------------------------------------------"
 puts "All done!"
