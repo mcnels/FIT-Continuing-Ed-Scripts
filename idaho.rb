@@ -4,18 +4,18 @@ require 'json'
 require 'axlsx'
 require 'date'
 
-canvas = Canvas::API.new(:host => "https://fit.instructure.com", :token => "1059~c5Bnm7yge4gSWfeOJ9ZRtWCpGbUPwDkRQzXgV20CeMcA1j9wvEpXvlMrF3x9onyD")
+canvas = Canvas::API.new(:host => "https://fit.instructure.com", :token => "TOKEN GOES HERE")
 
 submInfo = Array.new
 # precourse survey submission date
-quiz_subm = canvas.get("/api/v1/courses/533396/quizzes/826643/submissions?", {'per_page' => '100'})
+quiz_subm = canvas.get("/api/v1/courses/COURSECODE/quizzes/826643/submissions?", {'per_page' => '100'})
 
 # Get all the quizzes
 while quiz_subm.more? do
   quiz_subm.next_page!
 end
 
-list_student = canvas.get("/api/v1/courses/533396/enrollments", {'type' =>'StudentEnrollment'})
+list_student = canvas.get("/api/v1/courses/COURSECODE/enrollments", {'type' =>'StudentEnrollment'})
 while list_student.more? do
   list_student.next_page!
 end
@@ -80,7 +80,7 @@ isDeactivated = false
 deactConfirm = ""
 deactivation.each do |deact|
   if deact[:status].to_s == "active"
-    canvas.delete("/api/v1/courses/533396/enrollments/" + deact[:enroll].to_s, {'task' =>'inactivate'})
+    canvas.delete("/api/v1/courses/COURSECODE/enrollments/" + deact[:enroll].to_s, {'task' =>'inactivate'})
     isDeactivated = true
 
     # send deactivation message to student
@@ -92,16 +92,11 @@ deactivation.each do |deact|
 end
 
 # send message to abareg, Jenn, Stephanie, Theresa and Marisell
-canvas.post("/api/v1/conversations", {'recipients[]' => '1010887', 'subject' =>'RBT Idaho Deactivations', 'body' => deactConfirm, "group_conversation" => true, "bulk_message" => true}) #abareg
-canvas.post("/api/v1/conversations", {'recipients[]' => '1842270', 'subject' =>'RBT Idaho Deactivations', 'body' => deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Stephanie
-canvas.post("/api/v1/conversations", {'recipients[]' => '1874990', 'subject' =>'RBT Idaho Deactivations', 'body' => deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Jenn
-canvas.post("/api/v1/conversations", {'recipients[]' => '1873108', 'subject' =>'RBT Idaho Deactivations', 'body' => deactConfirm, "group_conversation" => true, "bulk_message" => true}) #Marisell
+canvas.post("/api/v1/conversations", {'recipients[]' => 'STAFFID', 'subject' =>'RBT Idaho Deactivations', 'body' => deactConfirm, "group_conversation" => true, "bulk_message" => true}) #abareg
 
 if isDeactivated == false
-  canvas.post("/api/v1/conversations", {'recipients[]' => '777482', 'subject' =>'RBT Idaho Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT Idaho today!", "group_conversation" => true, "bulk_message" => true}) #Theresa
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1842270', 'subject' =>'RBT Idaho Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT Idaho today!", "group_conversation" => true, "bulk_message" => true}) #Stephanie
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1874990', 'subject' =>'RBT Idaho Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT Idaho today!", "group_conversation" => true, "bulk_message" => true}) #Jenn
-  canvas.post("/api/v1/conversations", {'recipients[]' => '1873108', 'subject' =>'RBT Idaho Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT Idaho today!", "group_conversation" => true, "bulk_message" => true}) #Marisell
+  canvas.post("/api/v1/conversations", {'recipients[]' => 'STAFFID', 'subject' =>'RBT Idaho Deactivations for ' + Date.today.to_s, 'body' => "No deactivations for RBT Idaho today!", "group_conversation" => true, "bulk_message" => true}) #Theresa
+
   puts "No deactivations today!"
 end
 
